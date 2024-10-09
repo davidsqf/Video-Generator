@@ -1,0 +1,14 @@
+{
+Brief: """Create a python3 project which generates an attractive story, then generate a natural audio that reads this story, then generates an image for this story. In the end, a video will be generated using the audio and image, and the video will eventually be uploaded to YouTube for the purpose of profiting""",
+Note: """In the following context, when I mention an OpenAI model, I need you to use the model's API properly""",
+Requirements of this project:
+[
+"""Create 2 AI agents, writer and reviewer. Both agents uses the OpenAI GPT-4o model as the source of intelligence""",
+"""Writer agent proposes a list of ideas for the story; then the reviewer agent reviews the ideas and provides comments and give a score for the attractiveness of each proposed idea; the writer agent revises the ideas based on the reviewer agent's responses and shows the revised ideas to the reviewer agent again. This process may iterate multiple times until a satisfying and detailed idea is finalized and agreed by both agents""",
+"""The writer agent composes an outline of this finalized story idea, and the reviewer agent comments, and the writer agent revises. This process may iterate multiple times until a satisfying and detailed idea is finalized and agreed by both agents""",
+"""The writer agent composes the full story of this finalized story outline, and the reviewer agent comments, and the writer agent revises. This process may iterate multiple times until a satisfying full story is finalized and agreed by both agents""",
+"""Create an AI agent called artist using OpenAI dall-e-3 model, which draws an eye-catching and attractive image for this story""",
+"""Create an AI agent called speaker using OpenAI tts-1-hd model, which reads the whole story into an audio using attractive and young female sound""",
+"""All generated products are to be stored inside the project directory locally with proper names"""
+],
+}
