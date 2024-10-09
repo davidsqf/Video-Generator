@@ -1,12 +1,12 @@
 # reviewer.py
 
 from openai import OpenAI
-from config import OPENAI_API_KEY
+from config import *
 
 class ReviewerAgent:
     def __init__(self):
         self.client = OpenAI(api_key=OPENAI_API_KEY)
-        self.model = "gpt-4-turbo"
+        self.model = REVIEWER_MODEL
 
     def review_ideas(self, ideas):
         prompt = f"Review the following story ideas, provide comments, and give a score out of 10 for their attractiveness:\n{ideas}"

@@ -1,12 +1,12 @@
 # writer.py
 
 from openai import OpenAI
-from config import OPENAI_API_KEY
+from config import *
 
 class WriterAgent:
     def __init__(self):
         self.client = OpenAI(api_key=OPENAI_API_KEY)
-        self.model = "gpt-4-turbo"
+        self.model = WRITER_MODEL
 
     def propose_ideas(self):
         prompt = "Generate a list of 5 unique and attractive story ideas suitable for a wide audience."
@@ -53,3 +53,25 @@ class WriterAgent:
         )
         summary = response.choices[0].message.content.strip()
         return summary
+
+    def generate_tags(self, story):
+        prompt = f"Provide a few concise tags of the following story, these tags will be used to categorize the story. Separate the tags by $ sign:\n\n{story}"
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=100  # Limit the response length
+        )
+        tags = response.choices[0].message.content.strip().split('$')
+        print('Generated tags: ', tags)
+        return tags
+
+    def write_catchy_description(self, story):
+        prompt = f"Provide a short and catchy description of the following story:\n\n{story}"
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=150  # Limit the response length
+        )
+        description = response.choices[0].message.content.strip()
+        print('Generated description: ', description)
+        return description

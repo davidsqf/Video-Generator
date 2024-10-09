@@ -1,6 +1,6 @@
 # speaker.py
 
-from config import OPENAI_API_KEY
+from config import *
 from openai import OpenAI, APIError
 from pathlib import Path
 from pydub import AudioSegment
@@ -10,8 +10,8 @@ import re
 class SpeakerAgent:
     def __init__(self):
         self.client = OpenAI(api_key=OPENAI_API_KEY)
-        self.model = "tts-1-hd"
-        self.voice = "nova"  # You can change this to an available voice
+        self.model = SPEAKER_MODEL
+        self.voice = SPEAKER_VOICE  # You can change this to an available voice
         self.max_chars = 4000  # Slightly less than 4096 to account for any overhead
         self.output_dir = Path("outputs")
         self.output_dir.mkdir(exist_ok=True)
@@ -53,7 +53,7 @@ class SpeakerAgent:
                 # chunk_audio_path.unlink()
             # Concatenate all audio segments
             final_audio = sum(audio_segments)
-            final_audio_path = self.output_dir / "story_audio.mp3"
+            final_audio_path = AUDIO_PATH
             final_audio.export(final_audio_path, format="mp3")
             print(f"Audio generation complete. Saved to {final_audio_path}")
             return str(final_audio_path)
