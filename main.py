@@ -8,6 +8,9 @@ from speaker import SpeakerAgent
 from upload import Uploader
 from video_maker import VideoMaker
 from writer import WriterAgent
+from colorama import Fore, Back, Style, init
+
+init(autoreset=True)
 
 
 def main(generate_story, generate_image, generate_audio, make_video, upload_video):
@@ -18,44 +21,44 @@ def main(generate_story, generate_image, generate_audio, make_video, upload_vide
         writer = WriterAgent()
         reviewer = ReviewerAgent()
 
+        print(Fore.RED + "GENERATING IDEAS")
         # Idea generation and review loop
         ideas = writer.propose_ideas()
         for _ in range(EPOCH_STORY_IDEA):
-            print("Writer Proposes Ideas:\n", ideas)
             feedback = reviewer.review_ideas(ideas)
-            print("Reviewer Feedback on Ideas:\n", feedback)
-            if "10/10" in feedback:
+            if REVIEW_EARLY_TERMINATION_KEYWORD in feedback:
                 break
-            ideas = writer.revise_ideas(feedback)
+            ideas = writer.revise_ideas(ideas, feedback)
 
         # Save the final ideas
         with open(STORY_IDEA_PATH, "w") as f:
             f.write(ideas)
 
         # Select the best idea (Assuming the first one for simplicity)
+        # todo: pick the idea with the highest score
         best_idea = ideas.strip().split('\n')[0]
 
+        print(Fore.RED + "GENERATING OUTLINE")
         # Outline generation and review loop
         outline = writer.compose_outline(best_idea)
         for _ in range(EPOCH_STORY_OUTLINE):
             feedback = reviewer.review_outline(outline)
-            print("Reviewer Feedback on Outline:\n", feedback)
-            if "No further suggestions" in feedback or "looks good" in feedback.lower():
+            if REVIEW_EARLY_TERMINATION_KEYWORD in feedback:
                 break
-            outline = writer.compose_outline(feedback)
+            outline = writer.revise_outline(outline, feedback)
 
         # Save the final outline
         with open(STORY_OUTLINE_PATH, "w") as f:
             f.write(outline)
 
+        print(Fore.RED + "GENERATING STORY")
         # Full story generation and review loop
         story = writer.compose_full_story(outline)
         for _ in range(EPOCH_FULL_STORY):
             feedback = reviewer.review_story(story)
-            print("Reviewer Feedback on Story:\n", feedback)
-            if "No further suggestions" in feedback or "well done" in feedback.lower():
+            if REVIEW_EARLY_TERMINATION_KEYWORD in feedback:
                 break
-            story = writer.compose_full_story(feedback)
+            story = writer.revise_full_story(story, feedback)
 
         # Save the final story
         with open(FULL_STORY_PATH, "w") as f:
@@ -118,10 +121,10 @@ if __name__ == "__main__":
     start = time.time()
     main(
         generate_story=True,
-        generate_image=True,
-        generate_audio=True,
-        make_video=True,
-        upload_video=True
+        generate_image=False,
+        generate_audio=False,
+        make_video=False,
+        upload_video=False
     )
     end = time.time()
     duration = end - start
